@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: postgres-reviews-mcp
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn mcp_server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false          # you paste the Supabase connection string
+      - key: OAUTH_CLIENT_ID
+        value: snowflake-demo-client
+      - key: OAUTH_CLIENT_SECRET
+        generateValue: true  # Render generates a strong secret for you
+      - key: TABLE_NAME
+        value: reviews
+      - key: PYTHON_VERSION
+        value: "3.11"
